@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block container %}
+<div class="container mt-4">
+    <h1>Distancia entre Dos Puntos</h1>
+
+    <form action="/distancia" method="post">
+        <div class="row">
+            <!-- Punto 1 -->
+            <div class="col-md-6 mb-3">
+                <h3>Punto 1 (x1, y1)</h3>
+                <div class="mb-3">
+                    <label for="x1" class="form-label">X1:</label>
+                    <input type="number" step="any" class="form-control" id="x1" name="x1" value="{{ x1 }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="y1" class="form-label">Y1:</label>
+                    <input type="number" step="any" class="form-control" id="y1" name="y1" value="{{ y1 }}" required>
+                </div>
+            </div>
+
+            <!-- Punto 2 -->
+            <div class="col-md-6 mb-3">
+                <h3>Punto 2 (x2, y2)</h3>
+                <div class="mb-3">
+                    <label for="x2" class="form-label">X2:</label>
+                    <input type="number" step="any" class="form-control" id="x2" name="x2" value="{{ x2 }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="y2" class="form-label">Y2:</label>
+                    <input type="number" step="any" class="form-control" id="y2" name="y2" value="{{ y2 }}" required>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Calcular Distancia</button>
+    </form>
+
+    {% if res is not none %}
+        <h2 class="mt-4">
+            La distancia entre los puntos ({{ x1 }}, {{ y1 }}) y ({{ x2 }}, {{ y2 }}) es: {{ "%.2f"|format(res) }}
+        </h2>
+    {% endif %}
+</div>
+{% endblock %}
