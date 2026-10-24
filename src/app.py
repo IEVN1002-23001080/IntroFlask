@@ -6,6 +6,7 @@ from flask_cors import CORS
 from config import config
  
 app = Flask(__name__)
+app.config.from_object(config['development'])
  
 CORS(app)
  
@@ -122,12 +123,31 @@ def actualizar_cursor(mat):
     except Exception as ex:
         con.connection.rollback()
         return jsonify({"message": "error {}".format(ex), 'exito': False}), 500
-          
+
+
+@app.route("/alumnos/<mat>", methods=['DELETE'])
+def eliminar_alumno(mat):
+    try:
+        alumno = leer_alumno_bd(mat)
+        if alumno is not None:
+            cursor = con.connection.cursor()
+            sql = "DELETE FROM alumnos WHERE matricula = %s"
+            cursor.execute(sql, (mat,))
+            con.connection.commit()
+            cursor.close()
+            return jsonify({'alumno': alumno,
+                            'mensaje': 'Alumno eliminado', 'exito': True})
+        else:
+            return jsonify({'alumno': None,
+                            'mensaje': 'Alumno no encontrado', 'exito': False}), 404
+    except Exception as ex:
+        con.connection.rollback()
+        return jsonify({"message": "error {}".format(ex), 'exito': False}), 500
+
 
 def pagina_no_encontrada(error):
     return "<h1>Pagina no encontrada</h1>", 404
  
 if __name__ == "__main__":
-    app.config.from_object(config['development'])
     app.register_error_handler(404, pagina_no_encontrada)
     app.run(host='0.0.0.0', port=5000)
